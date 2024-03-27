@@ -11,9 +11,9 @@ CREATE TABLE tbl_board (
 );
 */
 
+import com.spring.mvc.chap05.dto.request.BoardWriteRequestDTO;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter @Getter
@@ -30,5 +30,9 @@ public class Board {
     private String writer; // 작성자
 
 
-
+    public Board(BoardWriteRequestDTO dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.writer = dto.getWriter();
+    }
 }
