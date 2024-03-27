@@ -57,4 +57,13 @@ public class ScoreService {
     public Score findOne(int stuNum) {
         return repository.findOne(stuNum);
     }
+
+    public boolean modifyScore(int stuNum, ScoreRequestDTO dto) {
+        // 클라이언트가 수정할 데이터를 보냄.
+        // -> 1. DB에 저장되어 있는 가진 데이터를 조회해서 수정을 진행.
+        // 2. 새로운 Score 객체를 생성해서 점수를 세팅하고 총점, 평균, 학점을 계산.
+        Score changeScore = new Score(dto);
+        changeScore.setStuNum(stuNum); // 학번은 따로 세팅
+        return repository.update(changeScore);
+    }
 }

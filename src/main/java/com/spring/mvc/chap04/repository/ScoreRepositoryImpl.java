@@ -94,4 +94,16 @@ public class ScoreRepositoryImpl implements ScoreRepository {
             return null;
         }
     }
+
+    @Override
+    public boolean update(Score score) {
+        String sql = "UPDATE tbl_score SET " +
+                "kor = ?, eng = ?, math = ?, total = ?, average = ?, grade = ? " +
+                "WHERE stu_num = ?";
+
+        int result = jdbcTemplate.update(sql, score.getKor(), score.getEng(), score.getMath(),
+                score.getTotal(), score.getAverage(), score.getGrade().toString()
+                , score.getStuNum());
+        return result == 1;
+    }
 }
