@@ -1,6 +1,7 @@
 package com.spring.mvc.chap05.service;
 
 import com.spring.mvc.chap05.dto.request.BoardWriteRequestDTO;
+import com.spring.mvc.chap05.dto.response.BoardDetailResponseDTO;
 import com.spring.mvc.chap05.dto.response.BoardListResponseDTO;
 import com.spring.mvc.chap05.entity.Board;
 import com.spring.mvc.chap05.repository.BoardRepository;
@@ -34,5 +35,13 @@ public class BoardService {
             dtoList.add(dto);
         }
         return dtoList;
+    }
+
+    public BoardDetailResponseDTO getDetail(int bno) {
+        // 상세보기 -> 조회수를 하나 올려주는 처리
+        repository.updateViewCount(bno);
+
+        Board board = repository.findOne(bno);
+        return new BoardDetailResponseDTO(board);
     }
 }
