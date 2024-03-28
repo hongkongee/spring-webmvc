@@ -1,10 +1,11 @@
 package com.spring.mvc.chap05.service;
 
+import com.spring.mvc.chap05.common.Page;
 import com.spring.mvc.chap05.dto.request.BoardWriteRequestDTO;
 import com.spring.mvc.chap05.dto.response.BoardDetailResponseDTO;
 import com.spring.mvc.chap05.dto.response.BoardListResponseDTO;
 import com.spring.mvc.chap05.entity.Board;
-import com.spring.mvc.chap05.repository.BoardRepository;
+import com.spring.mvc.chap05.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,21 +16,23 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardService {
 
-    private final BoardRepository repository;
+//    private final BoardRepository mapper;
+
+    private final BoardMapper mapper; // mybatis가 우리가 맏는 xml을 클래스로 변환해서 객체를 주입해 줌
 
     public void register(BoardWriteRequestDTO dto) {
         Board board = new Board(dto);
-        repository.save(board);
+        mapper.save(board);
     }
 
     public void deleteBoard(int boardNo) {
-        repository.delete(boardNo);
+        mapper.delete(boardNo);
     }
 
-    // repository로부터 전달받은 entity List를 DTO List로 변환해서 컨트롤러에게 리턴
-    public List<BoardListResponseDTO> getList() {
+    // mapper로부터 전달받은 entity List를 DTO List로 변환해서 컨트롤러에게 리턴
+    public List<BoardListResponseDTO> getList(Page page) {
         List<BoardListResponseDTO> dtoList = new ArrayList<>();
-        List<Board> boardList = repository.findAll();
+        List<Board> boardList = mapper.findAll(page);
         for (Board board : boardList) {
             BoardListResponseDTO dto = new BoardListResponseDTO(board);
             dtoList.add(dto);
@@ -39,9 +42,9 @@ public class BoardService {
 
     public BoardDetailResponseDTO getDetail(int bno) {
         // 상세보기 -> 조회수를 하나 올려주는 처리
-        repository.updateViewCount(bno);
+        mapper.updateViewCount(bno);
 
-        Board board = repository.findOne(bno);
+        Board board = mapper.findOne(bno);
         return new BoardDetailResponseDTO(board);
     }
 }
