@@ -47,4 +47,8 @@ public class BoardService {
         Board board = mapper.findOne(bno);
         return new BoardDetailResponseDTO(board);
     }
+
+    public int getCount() {
+        return mapper.getCount();
+    }
 }

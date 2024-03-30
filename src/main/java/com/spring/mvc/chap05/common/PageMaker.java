@@ -1,5 +1,10 @@
 package com.spring.mvc.chap05.common;
 
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
+@Getter @ToString @EqualsAndHashCode
 public class PageMaker {
 
     // 페이지 시작번호와 끝번호 (1~10, 11~20)
@@ -34,7 +39,6 @@ public class PageMaker {
         // 이전 버튼 활성화 여부 (prev)
         this.prev = this.begin > 1;
 
-        /*
         // 마지막 페이지 구간에서 end값을 finalPage 값으로 변경
         this.finalPage = (int) Math.ceil((double) totalCount / page.getAmount());
         if (this.finalPage < this.end) {
@@ -44,7 +48,6 @@ public class PageMaker {
 
         // 다음 버튼 활성화 여부 (next)
         this.next = this.end < this.finalPage;
-        */
 
         /*
         // next 여부 구하기
