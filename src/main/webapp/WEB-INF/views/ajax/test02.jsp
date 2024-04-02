@@ -52,15 +52,15 @@
                         'age': age,
                         'hobby' : arr
                     })
-                })
-                .then(res => res.json())
-                .then(value => console.log(value));
+                 });
+                // .then(res => res.json())
+                // .then(value => console.log(value));
 
 
             // fetch를 통해 비동기 방식의 요청을 보내면 응답 결과로 Promise 타입의 객체가 리턴됨.
             // Promise안에 PromiseResult라는 이름으로 전체적인 응답 정보가 담겨진 Response라는
             // 객체가 담겨져 있음.
-            console.log(fetchResult);
+            // console.log(fetchResult);
 
             // Promise 객체는 then() 메서드를 제공합니다.
             // then()은 비동기 방식의 요청이 성공했을 때 해당 Promise 객체 내부의 여러가지 결과를
@@ -68,7 +68,7 @@
             // Promise 객체에 담긴 여러 정보 중 PromiseResult에 담긴 Response 객체를 콜백 함수의 매개값으로 받아
             // json() 메서드를 통해 JSON 객체를 JavaScript로 변환해서 리턴받을 수 있습니다.
 
-            console.log(fetchResult.then(res => res.json()));
+            // console.log(fetchResult.then(res => res.json()));
             
             const response = fetchResult.then(function(res){
                 return res.json();
