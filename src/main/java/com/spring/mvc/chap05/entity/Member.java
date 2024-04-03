@@ -14,8 +14,15 @@ CONSTRAINT pk_member PRIMARY KEY (account)
 );
 */
 
+import lombok.*;
+
 import java.time.LocalDateTime;
 
+@Setter @Getter @ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Member {
     private String account;
     private String password;
