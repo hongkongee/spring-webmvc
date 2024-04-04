@@ -34,6 +34,6 @@ public class Board {
     public Board(BoardWriteRequestDTO dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
-        this.writer = dto.getWriter();
+//        this.writer = dto.getWriter();
     }
 }

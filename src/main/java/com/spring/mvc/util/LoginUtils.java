@@ -9,6 +9,9 @@ public class LoginUtils {
     // 로그인 세션 키
     public static final String LOGIN_KEY = "login";
 
+    // 자동 로그인 쿠키 이름
+    public static final String AUTO_LOGIN_COOKIE = "auto";
+
     // 로그인 여부 확인
     public static boolean isLogin(HttpSession session) {
         return session.getAttribute(LOGIN_KEY) != null;
@@ -21,6 +24,18 @@ public class LoginUtils {
         LoginUserResponseDTO loginUser
                 = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
         return loginUser.getAccount();
+    }
+
+    // 내가 쓴 게시물인지 확인해 주는 메서드
+    public static boolean isMine(HttpSession session, String targetAccount) {
+        return targetAccount.equals(getCurrentLoginMemberAccount(session));
+    }
+
+    // 관리자인지 확인해주는 메서드
+    public static boolean isAdmin(HttpSession session) {
+        LoginUserResponseDTO loginUser = (LoginUserResponseDTO) session.getAttribute(LOGIN_KEY);
+        System.out.println("loginUser = " + loginUser);
+        return loginUser.getAuth().equals("관리자회원");
     }
     
     

@@ -44,7 +44,7 @@ class MemberServiceTest {
                 .build(); // 입력창에 입력한 아이디, 패스워드
 
         // when
-        LoginResult result = memberService.authenticate(dto);
+        LoginResult result = memberService.authenticate(dto, request.getSession(), response);
 
         // then
         assertEquals(SUCCESS, result);
