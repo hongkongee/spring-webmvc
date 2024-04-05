@@ -5,6 +5,7 @@ import com.spring.mvc.chap05.dto.request.LoginRequestDTO;
 import com.spring.mvc.chap05.dto.request.SignUpRequestDTO;
 import com.spring.mvc.chap05.service.LoginResult;
 import com.spring.mvc.chap05.service.MemberService;
+import com.spring.mvc.util.FileUtils;
 import com.spring.mvc.util.LoginUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -12,6 +13,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +26,10 @@ import static com.spring.mvc.chap05.service.LoginResult.SUCCESS;
 @RequiredArgsConstructor
 @Slf4j
 public class MemberController {
+
+    // properties 파일에 작성한 값을 가져오는 아노테이션
+    @Value("${file.upload.root-path}")
+    private String rootPath;
 
     private final MemberService memberService;
 
@@ -52,8 +58,13 @@ public class MemberController {
     @PostMapping("/sign-up")
     public String signUp(SignUpRequestDTO dto) {
         log.info("/members/sign-up: POST, dto: {}", dto);
+        log.info("attached file name: {}", dto.getProfileImage().getOriginalFilename());
 
-        memberService.join(dto);
+        // 서버에 파일 업로드 지시
+        String savePath = FileUtils.uploadFile(dto.getProfileImage(), rootPath);
+        log.info("save-path: {}", savePath);
+
+        memberService.join(dto, savePath);
         return "redirect:/board/list";
 
     }
