@@ -19,6 +19,7 @@ import org.springframework.web.util.WebUtils;
 import java.time.LocalDateTime;
 
 import static com.spring.mvc.chap05.service.LoginResult.*;
+import static com.spring.mvc.util.LoginUtils.*;
 import static com.spring.mvc.util.LoginUtils.AUTO_LOGIN_COOKIE;
 import static com.spring.mvc.util.LoginUtils.getCurrentLoginMemberAccount;
 
@@ -111,10 +112,11 @@ public class MemberService {
                 .name(foundMember.getName())
                 .email(foundMember.getEmail())
                 .auth(foundMember.getAuth().getDescription())
+                .profile(foundMember.getProfileImage())
                 .build();
 
         // 세션에 로그인한 회원 정보를 저장
-        session.setAttribute(LoginUtils.LOGIN_KEY, dto);
+        session.setAttribute(LOGIN_KEY, dto);
         // 세션 수명 설정
         session.setMaxInactiveInterval(60 * 60); // 1시간
         
