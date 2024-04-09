@@ -8,7 +8,7 @@ import org.json.simple.parser.JSONParser;
 
 @Slf4j
 public class WeatherService {
-/*
+
 
 
 
@@ -17,6 +17,7 @@ public class WeatherService {
 //    if(conn.getResponseCode())
 
 
+  /*
     // StringBuilder를 String으로 변환
     String jsonString = sb.toString();
 
