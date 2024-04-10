@@ -10,6 +10,7 @@
         FROM test_location
         WHERE area1 = #{area1}
         AND area2 LIKE CONCAT('%', #{area2}, '%')
+        LIMIT 0, 1
     </select>
 
 </mapper>
