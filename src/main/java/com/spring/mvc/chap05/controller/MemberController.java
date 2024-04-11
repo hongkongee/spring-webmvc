@@ -3,6 +3,7 @@ package com.spring.mvc.chap05.controller;
 
 import com.spring.mvc.chap05.dto.request.LoginRequestDTO;
 import com.spring.mvc.chap05.dto.request.SignUpRequestDTO;
+import com.spring.mvc.chap05.entity.Member;
 import com.spring.mvc.chap05.service.LoginResult;
 import com.spring.mvc.chap05.service.MemberService;
 import com.spring.mvc.util.FileUtils;
@@ -63,6 +64,9 @@ public class MemberController {
         // 서버에 파일 업로드 지시
         String savePath = FileUtils.uploadFile(dto.getProfileImage(), rootPath);
         log.info("save-path: {}", savePath);
+
+        // 일반 방식으로 (우리 사이트를 통해) 회원가입
+        dto.setLoginMethod(Member.LoginMethod.COMMON);
 
         memberService.join(dto, savePath);
         return "redirect:/board/list";
