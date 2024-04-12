@@ -3,11 +3,13 @@ package com.spring.mvc.chap05.controller;
 
 import com.spring.mvc.chap05.dto.request.LoginRequestDTO;
 import com.spring.mvc.chap05.dto.request.SignUpRequestDTO;
+import com.spring.mvc.chap05.dto.response.LoginUserResponseDTO;
 import com.spring.mvc.chap05.entity.Member;
 import com.spring.mvc.chap05.service.LoginResult;
 import com.spring.mvc.chap05.service.MemberService;
 import com.spring.mvc.util.FileUtils;
 import com.spring.mvc.util.LoginUtils;
+import com.spring.mvc.util.MailSenderService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -33,6 +35,7 @@ public class MemberController {
     private String rootPath;
 
     private final MemberService memberService;
+    private final MailSenderService mailSenderService;
 
     // 회원 가입 양식 화면 요청
     // 응답하고자 하는 화면의 경로가 url과 동일하다면 void로 처리할 수 있습니다. (선택사항)
@@ -141,6 +144,12 @@ public class MemberController {
             memberService.autoLoginClear(request, response);
         }
 
+        // sns 로그인 상태인지를 확인
+        LoginUserResponseDTO dto = (LoginUserResponseDTO) session.getAttribute("login"); // LOGIN_KEY
+        if (dto.getLoginMethod().equals("KAKAO")) {
+            memberService.kakaoLogout(dto, session);
+        }
+
         // 세션에서 로그인 정보 기록 삭제
         session.removeAttribute("login");
 
@@ -148,6 +157,28 @@ public class MemberController {
         session.invalidate();
 
         return "redirect:/";
+
+    }
+
+    // 연습용 이메일 폼 화면
+    @GetMapping("/email")
+    public String emailForm() {
+        return "email/email-form";
+    }
+
+    // 이메일 인증
+    @PostMapping("/email")
+    @ResponseBody
+    public ResponseEntity<String> mailCheck(@RequestBody String email) {
+
+        try {
+            log.info("이메일 인증 요청 들어옴!: {}", email);
+            String authNum = mailSenderService.joinEmail(email);
+            return ResponseEntity.ok().body(authNum);
+
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("이메일 전송 방식이 잘못되었습니다.");
+        }
 
     }
 

@@ -6,17 +6,25 @@ import com.spring.mvc.chap05.dto.request.SignUpRequestDTO;
 import com.spring.mvc.chap05.dto.response.LoginUserResponseDTO;
 import com.spring.mvc.chap05.entity.Member;
 import com.spring.mvc.chap05.mapper.MemberMapper;
-import com.spring.mvc.util.LoginUtils;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.WebUtils;
 
+import org.springframework.http.HttpHeaders;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import static com.spring.mvc.chap05.service.LoginResult.*;
 import static com.spring.mvc.util.LoginUtils.*;
@@ -25,6 +33,7 @@ import static com.spring.mvc.util.LoginUtils.getCurrentLoginMemberAccount;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class MemberService {
 
     private final MemberMapper memberMapper;
@@ -144,6 +153,35 @@ public class MemberService {
                             .build()
             );
         }
+
+    }
+
+    public void kakaoLogout(LoginUserResponseDTO dto, HttpSession session) {
+        String requestUri = "https://kapi.kakao.com/v1/user/logout";
+
+        String accessToken = (String) session.getAttribute("access_token");
+
+        HttpHeaders headers = new HttpHeaders();
+
+        headers.add("Authorization", "Bearer " + accessToken);
+
+        MultiValueMap<String, Object> params = new LinkedMultiValueMap<>();
+        params.add("target_id_type", "user_id");
+        params.add("target_id", dto.getAccount());
+
+        RestTemplate template = new RestTemplate();
+        ResponseEntity<Map> responseEntity = template.exchange(
+                requestUri,
+                HttpMethod.POST,
+                new HttpEntity<>(params, headers),
+                Map.class
+        );
+
+        Map<String, Object> responseJSON = (Map<String, Object>) responseEntity.getBody();
+        log.info("응답 데이터: {}", responseJSON); // 로그아웃하는 사용자의 id
+
+        // 만약 access_token의 값을 DB에 저장한 경우에는, 응답받은 id를 통해서
+        // DB의 access_token의 값을 update를 해서 null로 만들어 주시면 됩니다.
 
     }
 }
